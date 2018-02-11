@@ -1,0 +1,122 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include <ctype.h>
+
+typedef struct m_struktura{
+	int a;
+	m_struktura* next;
+	m_struktura* prev;
+}deliteli_chislitelya;
+
+deliteli_chislitelya* estli_delitel(int chis);
+void pic();
+
+int main(){
+	
+	pic();
+	
+	int r1, r2, r3, r4, r5;
+	printf("Vvedite znacheniye koeffitsiyenta u R1.\n");
+	scanf("%d", &r1);
+	printf("Vvedite znacheniye koeffitsiyenta u R2.\n");
+	scanf("%d", &r2);
+	printf("Vvedite znacheniye koeffitsiyenta u R3.\n");
+	scanf("%d", &r3);
+	printf("Vvedite znacheniye koeffitsiyenta u R4.\n");
+	scanf("%d", &r4);
+	printf("Vvedite znacheniye koeffitsiyenta u R5.\n");
+	scanf("%d", &r5);
+	
+	int chis = 0, znam = 0;
+	chis = ((r5) * (r1 + r2) * (r3 + r4)) + (r2*r3*r4 + r1*r3*r4 + r1*r2*r4 + r1*r2*r3);
+	znam = ((r5) * (r1 + r2 + r3 + r4)) + ((r2 + r4) * (r1 + r3));
+			
+	deliteli_chislitelya* head = estli_delitel(chis);
+	deliteli_chislitelya* temp;
+	deliteli_chislitelya* tempm;
+	
+	while(1){
+		temp = head;
+		while(temp->next != NULL){
+			temp = temp->next;
+		}		
+		tempm = temp->prev;
+		
+		if(head->next == NULL){//PROVERENA
+			if(znam%(head->a) == 0){
+				znam /= head->a;
+				chis /= head->a;}
+			free(head);break;}
+		
+		
+		
+		else if(znam%(temp->a) == 0){
+			znam /= temp->a;
+			chis /= temp->a;
+			tempm->next = NULL;
+			free(temp);}
+			
+		else{
+			tempm->next = NULL;
+			free(temp);}	
+	}
+	
+	printf("         %d\n", chis);
+	printf("Otvet: -----\n");
+	printf("         %d\n", znam);
+	
+	printf("Dlya vykhoda vvedi lyuboy simvol s klaviatury.");
+	int symbol1 = getchar( );
+	symbol1 = getchar( );
+	
+	return 0;}
+
+void pic(){
+	printf("     ----R1---------R2----     \n");
+	printf("     |         |         |     \n");
+	printf("     |         |         |     \n");
+	printf("A----|         R5        |----B\n");
+	printf("     |         |         |     \n");
+	printf("     |         |         |     \n");
+	printf("     ----R3---------R4----     \n");
+	
+	printf("Khochesh' nayti znacheniye soprotivleni R_ab?\n");
+	printf("No u tebya net vremyani ili prosto len'?\n");
+	printf("Vykhod yest'! Prostto vvedi ikh i poluchi otvet.\n");
+	puts(" ");
+	printf("Vnimaniye, nado vvodit' tol'ko znacheniya koeffitsiyentov pri R.\nNaprimer znachenii R1=5R, nado vvesti 5.\n");
+	puts(" ");}
+
+deliteli_chislitelya* estli_delitel(int chis){//PROVERENA 
+	deliteli_chislitelya* head = (deliteli_chislitelya*)malloc(sizeof(deliteli_chislitelya));
+	head -> next = NULL;
+	head -> prev = NULL;
+	
+	deliteli_chislitelya* current = head;
+		
+	int helper = 0;
+		
+	for(int i = 2; i <= chis; ++i){
+		
+		if((chis%i) == 0){
+			
+			if(helper == 0){
+				head->a = i;}
+				
+			else{
+				
+				while(current -> next != NULL){
+					current = current->next;}
+				
+				deliteli_chislitelya* temp = (deliteli_chislitelya*)malloc(sizeof(deliteli_chislitelya));
+				temp->next = NULL;
+				temp->prev = current;
+				current->next = temp;
+				temp->a = i;
+			}
+			
+			helper++;
+		}
+	}
+	
+	return head;}
